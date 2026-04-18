@@ -1,140 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Mock Test - Forest Management</title>
+<title>Forest Mock Test</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #f3f6fb;
+    --panel: #ffffff;
+    --panel-border: #d8e1f0;
+    --text: #1d2a3b;
+    --muted: #5d6b7f;
+    --accent: #1a73e8;
+    --accent-hover: #145cb8;
+    --success-bg: #e6f6ec;
+    --success-border: #5fbe82;
+    --danger-bg: #fde9e7;
+    --danger-border: #e07165;
+}
+
 body {
-    font-family: Arial;
-    background: linear-gradient(135deg,#1e3c72,#2a5298);
-    color:white;
-    padding:20px;
-}
-h1{text-align:center;}
-
-.container{
-    max-width:900px;
-    margin:auto;
-    background:rgba(0,0,0,0.6);
-    padding:20px;
-    border-radius:10px;
+    margin: 0;
+    padding: 24px 14px 40px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        radial-gradient(circle at 10% 0%, #dce9ff 0%, transparent 32%),
+        radial-gradient(circle at 90% 20%, #e2f8f2 0%, transparent 30%),
+        var(--bg);
+    color: var(--text);
 }
 
-.question{
-    margin-bottom:15px;
-    padding:12px;
-    border-radius:8px;
-    background:rgba(255,255,255,0.1);
+.container {
+    max-width: 980px;
+    margin: 0 auto;
 }
 
-.correct{background:#27ae60;}
-.wrong{background:#c0392b;}
-
-.answer{
-    margin-top:8px;
-    font-size:14px;
-    color:#f1c40f;
+.header {
+    background: linear-gradient(120deg, #0f3d7a, #1a73e8 52%, #21a39c);
+    color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 14px 35px rgba(18, 52, 99, 0.22);
 }
 
-button{
-    width:100%;
-    padding:15px;
-    font-size:18px;
-    background:#f39c12;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 1.9rem;
+    letter-spacing: 0.2px;
 }
 
-#result{
-    text-align:center;
-    font-size:22px;
-    margin-top:20px;
+.header p {
+    margin: 0;
+    opacity: 0.94;
+}
+
+.toolbar {
+    position: sticky;
+    top: 12px;
+    z-index: 50;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.93);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(8px);
+}
+
+.meta {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.question {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 16px;
+    margin: 12px 0;
+    box-shadow: 0 7px 18px rgba(24, 53, 88, 0.06);
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.question p {
+    margin: 0 0 12px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.option {
+    display: block;
+    margin: 7px 0;
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.option:hover {
+    background: #f3f7ff;
+}
+
+.correct {
+    background: var(--success-bg);
+    border-color: var(--success-border);
+}
+
+.wrong {
+    background: var(--danger-bg);
+    border-color: var(--danger-border);
+}
+
+.answer {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #c5d2e5;
+    font-size: 0.95rem;
+    color: #20344d;
+}
+
+.score-card {
+    margin-top: 20px;
+    margin-bottom: 8px;
+    background: #fff;
+    border: 1px solid var(--panel-border);
+    border-left: 5px solid #1a73e8;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 7px 18px rgba(24, 53, 88, 0.08);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.sub-result {
+    color: var(--muted);
+    margin-top: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding: 16px 10px 28px;
+    }
+
+    .header {
+        padding: 18px;
+    }
+
+    .header h1 {
+        font-size: 1.45rem;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    button {
+        width: 100%;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<div class="container">
+<div class="header">
 <h1>Forest Management Mock Test</h1>
-<p style="text-align:center;">Made by Bhat Industries</p>
+<h2>Made by Bhat Industries</h2>
+<p>Attempt all 120 questions, then submit once to see your score and full review.</p>
+</div>
 
-<div class="container" id="quiz"></div>
+<div class="toolbar">
+    <div class="meta" id="attemptInfo">Questions: 120 | Answered: 0</div>
+    <button id="submitBtn" onclick="submitQuiz()">Submit Test</button>
+</div>
 
-<button onclick="submitQuiz()">Submit Test</button>
-<div id="result"></div>
+<div id="quiz"></div>
+
+<div class="score-card" id="result" style="display:none;"></div>
+</div>
 
 <script>
 
-// SAMPLE QUESTIONS (pattern reused to reach 120)
-const baseQuestions = [
- {q:"Which is not a consumptive value?",o:["Timber","Firewood","NTFP","Education"],a:3},
- {q:"Abiotic factor is?",o:["Tree","Vine","Animal","Water"],a:3},
- {q:"Lithosere is?",o:["Hydrosere","Xerosere","Halosere","Psammosere"],a:1},
- {q:"Black soil is called?",o:["Regur","Alluvial","Red","Saline"],a:0},
- {q:"Fire triangle includes?",o:["Fuel, Oxygen, Heat","Fire, Air, Wood","Heat, Air, Soil","Fuel, Smoke, Heat"],a:0}
+const questions = [
+{"q":"Which of these is not a consumptive value?","o":["Timber","Firewood","Non-timber forest products","Education"],"a":3},
+{"q":"Tropical moist forests do not include","o":["Broadleaved forests","Wet evergreen forests","Semi evergreen forests","Moist deciduous forests"],"a":0},
+{"q":"Montane sub-tropical forests do not include","o":["Broadleaved forests","Pine forests","Semi evergreen forests","Dry evergreen forests"],"a":2},
+{"q":"Forest meaning is based on","o":["Biological","Ecological","Silvicultural","Dictionary"],"a":3},
+{"q":"Which is not a use value?","o":["Direct","Indirect","Option","Existence"],"a":3},
+{"q":"Future generation value","o":["Altruistic","Bequest","Existence","Option"],"a":1},
+{"q":"Which is not non-use value?","o":["Direct","Existence","Altruistic","Bequest"],"a":0},
+{"q":"Forest land includes","o":["Some recorded","Any recorded ownership","Some irrespective","Any irrespective"],"a":3},
+{"q":"Not a forest type in India","o":["Mediterranean dry","Tropical dry","Montane temperate","Alpine"],"a":0},
+{"q":"Forest origin word","o":["Latin outside","Greek outside","Latin trees","Greek trees"],"a":0},
+
+{"q":"Abiotic factor","o":["Vines","Trees","Reptiles","Water"],"a":3},
+{"q":"Wildfire climax","o":["Climatic","Edaphic","Disclimax","Catastrophic"],"a":3},
+{"q":"Study of forest crops","o":["Foresticulture","Monoculture","Silviculture","Silvics"],"a":3},
+{"q":"Cultivation science","o":["Foresticulture","Monoculture","Silviculture","Silvics"],"a":2},
+{"q":"Not feature of pioneer","o":["Grow rocks","Tolerate extreme","Large size","Short life"],"a":2},
+{"q":"Compensation point","o":["P=R","P>R","P<R","None"],"a":0},
+{"q":"NPP formula","o":["APAR+LUE","APAR×LUE","APAR-LUE","APAR/LUE"],"a":1},
+{"q":"Lithosere","o":["Hydrosere","Xerosere","Psammosere","Halosere"],"a":1},
+{"q":"Forestry application","o":["Management","Economics","Mensuration","Protection"],"a":0},
+{"q":"Boron is","o":["Macro","Micro","Primary","Secondary"],"a":1},
+
+{"q":"Thermal stress causes","o":["Chemical","Physical","Biological","None"],"a":1},
+{"q":"Cryofracturing","o":["Chemical","Physical","Biological","None"],"a":1},
+{"q":"Carbonation","o":["Chemical","Physical","Biological","None"],"a":0},
+{"q":"Khadar soil","o":["Black","Alluvial","Saline","Red"],"a":1},
+{"q":"Self ploughing soil","o":["Black","Alluvial","Saline","Red"],"a":0},
+{"q":"C horizon","o":["Organic","Topsoil","Subsoil","Substratum"],"a":3},
+{"q":"Soil formation","o":["Vegetation","Time","Climate","All"],"a":3},
+{"q":"Regur soil","o":["Black","Alluvial","Saline","Red"],"a":0},
+{"q":"Ocean wave action","o":["Chemical","Physical","Biological","None"],"a":1},
+{"q":"Bangar soil","o":["Black","Alluvial","Saline","Red"],"a":1},
+
+{"q":"False form factor base","o":["Base","Breast height","10%","20%"],"a":0},
+{"q":"Breast height India","o":["1.37m","1.47m","1.57m","2.47m"],"a":0},
+{"q":"Basal area formula concept","o":["Area","Volume","Height","None"],"a":0},
+{"q":"Similar triangles measurement","o":["Similar","Dissimilar","Direct","Indirect"],"a":3},
+{"q":"Triangle base","o":["0.33","0.5","0.75","1"],"a":1},
+{"q":"Basal area 25cm","o":[".049",".096",".149",".195"],"a":0},
+{"q":"Normal form factor","o":["Base","Breast","10%","20%"],"a":1},
+{"q":"Basal area 35cm","o":[".049",".096",".149",".195"],"a":2},
+{"q":"DOB relation","o":["dub+tb","dub-tb","dub+2tb","dub-2tb"],"a":2},
+{"q":"Spacing factor","o":["5","10","15","Data insufficient"],"a":3},
+
+{"q":"LiDAR distance","o":["500","1000","1500","2000"],"a":2},
+{"q":"Random sampling","o":["Simple","Systematic","Stratified","Multistage"],"a":0},
+{"q":"Every kth unit","o":["Simple","Systematic","Stratified","Multistage"],"a":1},
+{"q":"Sampling list","o":["Frame","Window","Sample","Population"],"a":0},
+{"q":"Accuracy","o":["Correctness","Closeness","Bias","Variance"],"a":0},
+{"q":"Bathymetric LiDAR","o":["Infrared","Near IR","Orange","Green"],"a":3},
+{"q":"Precision","o":["Correctness","Closeness","Bias","Variance"],"a":1},
+{"q":"IMU","o":["Imperial meter","Inertial meter","Imperial measure","Inertial measure"],"a":3},
+{"q":"Flyover frequency","o":["Spatial","Temporal","Spectral","Radiometric"],"a":1},
+{"q":"Geodetic survey","o":["Small area","Large area","Flat earth","None"],"a":1},
+
+{"q":"HIPPO not include","o":["Habitat loss","Enhancement","Overharvest","Population"],"a":1},
+{"q":"Trap hunting","o":["Weapon+Hunt","No weapon+Hunt","Weapon no hunt","None"],"a":0},
+{"q":"Deterministic","o":["Variation","Fire","Death rate","Disease"],"a":2},
+{"q":"HIPPO second","o":["Loss","Invasive","Pollination","Pollution"],"a":2},
+{"q":"I=PAT T","o":["Transfer","Time","Technology","None"],"a":2},
+{"q":"Climbers fire","o":["Ground","Surface","Ladder","Storm"],"a":2},
+{"q":"Stochastic","o":["Birth","Death","Structure","Fire"],"a":3},
+{"q":"Fire triangle","o":["Fire air heat","Fire oxygen wood","Fuel air wood","Fuel oxygen heat"],"a":3},
+{"q":"I=PAT P","o":["Professional","Pollution","Population","None"],"a":2},
+{"q":"Gun capture","o":["Weapon+Hunt","No weapon+Hunt","Weapon no hunt","None"],"a":0},
+
+{"q":"Seed movement","o":["Translocation","Migration","Dispersal","Drifting"],"a":2},
+{"q":"Clear felling disadvantage","o":["Simple","Uniform","Erosion","Natural mimic"],"a":2},
+{"q":"Ring weeding","o":["Natural","Assisted","Direct","Planting"],"a":1},
+{"q":"Tree maturity","o":["Crop","Felling","Rotation","Maturity"],"a":2},
+{"q":"Natural regeneration NOT","o":["Low cost","Less labor","Genetic","Control"],"a":3},
+{"q":"Tending stage","o":["Early","Middle","Late","Any"],"a":0},
+{"q":"Sequence silviculture","o":["T-R-H","H-T-R","H-R-T","R-H-T"],"a":2},
+{"q":"Taungya","o":["Natural","Villagers","Nomads","Hunters"],"a":1},
+{"q":"Clear cut regen","o":["Natural","Direct","Seedling","Transplant"],"a":3},
+{"q":"Natural regen NOT","o":["Seed loss","Spacing","Time","Machinery"],"a":3},
+
+{"q":"Shelterwood growth","o":["Centrifugal","Centripetal","Parallel","Perpendicular"],"a":0},
+{"q":"Shelterwood sequence","o":["Prep-sec-seed-final","Prep-seed-sec-final","Prep-sec-seed-final","Prep-seed-sec-final"],"a":2},
+{"q":"Shelterwood result","o":["Even natural","Even artificial","Uneven natural","Uneven artificial"],"a":0},
+{"q":"Catchment best","o":["Clear","Selection","Uniform","Group"],"a":3},
+{"q":"Remove trees","o":["Prep","Seed","Secondary","Final"],"a":0},
+{"q":"Open canopy","o":["Prep","Seed","Secondary","Final"],"a":2},
+{"q":"PB-III age","o":["0-30","30-60","60-90","90-120"],"a":2},
+{"q":"Clear felling NOT","o":["Light","Shade","Plain","Plateau"],"a":1},
+{"q":"Close nature","o":["Clear","Selection","Uniform","Group"],"a":1},
+{"q":"Inverse J curve","o":["Clear","Selection","Uniform","Group"],"a":1},
+
+{"q":"Tree marking","o":["Survey","Cruise","Mark","Log"],"a":2},
+{"q":"Log movement","o":["Mark","Buck","Skid","Delimb"],"a":2},
+{"q":"Net growth","o":["V2-V1","V2-V1+H-I","V2-V1+H-I+M","V2-V1+H-I-M"],"a":3},
+{"q":"Timber survey","o":["Survey","Cruise","Mark","Log"],"a":1},
+{"q":"Face cut accuracy","o":["Conv","Humboldt","Open","All"],"a":2},
+{"q":"Retain color","o":["Yellow","Blue","Red","White"],"a":1},
+{"q":"Cut logs","o":["Mark","Buck","Skid","Delimb"],"a":1},
+{"q":"Research color","o":["Yellow","Blue","Red","White"],"a":3},
+{"q":"Boundary color","o":["Yellow","Blue","Red","White"],"a":0},
+{"q":"Lumber saving","o":["Conv","Humboldt","Open","All"],"a":1},
+
+{"q":"Storage","o":["High high","High low","Low high","Low low"],"a":3},
+{"q":"Agave","o":["Barbed","Live","Chain","Stone"],"a":1},
+{"q":"Moisture conserve","o":["Sunken","Raised","Flat","All"],"a":3},
+{"q":"Shell cracking","o":["Amla","Mango","Ber","Teak"],"a":3},
+{"q":"Not lab method","o":["Dry weight","Color","Moisture","Chemical"],"a":1},
+{"q":"Refractory","o":["<10","10-30",">30","None"],"a":0},
+{"q":"Water logging","o":["Sunken","Raised","Flat","All"],"a":1},
+{"q":"Wet dry seeds","o":["Amla","Mango","Ber","Teak"],"a":2},
+{"q":"Spacing depends","o":["Objective","Matching","Growth","All"],"a":3},
+{"q":"Germination %","o":["Number","Percentage","Energy","Power"],"a":2},
+
+{"q":"Zoo","o":["In-situ","Ex-situ","In preserve","Ex preserve"],"a":1},
+{"q":"Captive breeding","o":["In-situ","Ex-situ","In preserve","Ex preserve"],"a":1},
+{"q":"Elephant","o":["Umbrella","Keystone","Flagship","All"],"a":3},
+{"q":"Sustainable harvest","o":["Conservation","Preservation","Env","None"],"a":0},
+{"q":"1894 NOT","o":["Protection","Production","Minor","Major"],"a":3},
+{"q":"Tiger","o":["Umbrella","Keystone","Flagship","All"],"a":3},
+{"q":"Canal planting","o":["Farm","Community","Extension","Agro"],"a":2},
+{"q":"Van Panchayat","o":["TN","MP","WB","Uttarakhand"],"a":3},
+{"q":"Orchid tourism","o":["Umbrella","Keystone","Flagship","Extinct"],"a":2},
+{"q":"Fig tree","o":["Least","Keystone","Flagship","Extinct"],"a":1},
+
+{"q":"Cattle disturbance","o":["Climatic","Edaphic","Disclimax","Catastrophic"],"a":2},
+{"q":"Ecology","o":["Conservation","Preservation","Env","Ecology"],"a":3},
+{"q":"No human interference","o":["Conservation","Preservation","Env","All"],"a":1},
+{"q":"Absolute form factor","o":["Base","Breast","10%","20%"],"a":0},
+{"q":"Highest organic","o":["Peaty","Alluvial","Saline","Red"],"a":0},
+{"q":"Form factor calc","o":["0.1","0.2","0.3","0.4"],"a":1},
+{"q":"Forest definition","o":["Silviculture","FAO","Legal","Ecological"],"a":1},
+{"q":"Laterite","o":["Red","Brick","Fertile","Infertile"],"a":1},
+{"q":"Girth tape","o":["Over","Under","Correct","None"],"a":0},
+{"q":"Soil profile","o":["Texture","Structure","Profile","Science"],"a":2}
+
 ];
 
-// Generate 120
-let questions = [];
-for(let i=0;i<120;i++){
-    let b = baseQuestions[i%5];
-    questions.push({
-        q: b.q + " ("+(i+1)+")",
-        o: b.o,
-        a: b.a
-    });
-}
 
-const quizDiv = document.getElementById("quiz");
 
-questions.forEach((item,index)=>{
-    let html = `<div class="question" id="qbox${index}">
-    <p>${index+1}. ${item.q}</p>`;
+// Render
+const quiz = document.getElementById("quiz");
 
-    item.o.forEach((opt,i)=>{
-        html += `
-        <label>
-        <input type="radio" name="q${index}" value="${i}">
-        ${opt}
-        </label><br>`;
+questions.forEach((item,i)=>{
+    let div = document.createElement("div");
+    div.className="question";
+    div.id="q"+i;
+
+    let html=`<p>${i+1}. ${item.q}</p>`;
+
+    item.o.forEach((opt,j)=>{
+        html+=`<label class="option"><input type="radio" name="q${i}" value="${j}"> ${opt}</label>`;
     });
 
-    html += `<div class="answer" id="ans${index}" style="display:none;"></div>`;
-    html += "</div>";
-
-    quizDiv.innerHTML += html;
+    html+=`<div class="answer" id="ans${i}" style="display:none;"></div>`;
+    div.innerHTML=html;
+    quiz.appendChild(div);
 });
 
+document.addEventListener("change", (e) => {
+    if (e.target && e.target.type === "radio") {
+        updateAttemptInfo();
+    }
+});
+
+function updateAttemptInfo() {
+    const answered = questions.reduce((count, _, i) => {
+        return count + (document.querySelector(`input[name="q${i}"]:checked`) ? 1 : 0);
+    }, 0);
+
+    document.getElementById("attemptInfo").innerText =
+        `Questions: ${questions.length} | Answered: ${answered}`;
+}
+
+updateAttemptInfo();
+
+// Submit
 function submitQuiz(){
-    let score = 0;
+    let score=0;
+    let answered = 0;
 
-    questions.forEach((item,index)=>{
-        let selected = document.querySelector(`input[name="q${index}"]:checked`);
-        let box = document.getElementById(`qbox${index}`);
-        let ansDiv = document.getElementById(`ans${index}`);
+    questions.forEach((item,i)=>{
+        let sel=document.querySelector(`input[name="q${i}"]:checked`);
+        let box=document.getElementById("q"+i);
+        let ans=document.getElementById("ans"+i);
 
-        let correctText = item.o[item.a];
+        box.classList.remove("correct", "wrong");
 
-        if(selected){
-            if(parseInt(selected.value) === item.a){
-                score++;
-                box.classList.add("correct");
-            }else{
-                box.classList.add("wrong");
-            }
+        if (sel) {
+            answered++;
+        }
+
+        if(sel && parseInt(sel.value, 10)===item.a){
+            score++;
+            box.classList.add("correct");
         }else{
             box.classList.add("wrong");
         }
 
-        ansDiv.style.display = "block";
-        ansDiv.innerHTML = "Correct Answer: " + correctText;
+        ans.style.display="block";
+        ans.innerText="Correct: "+item.o[item.a];
     });
 
-    document.getElementById("result").innerText =
-        "Your Score: " + score + " / " + questions.length;
+    const percent = Math.round((score / questions.length) * 100);
+    const result = document.getElementById("result");
+    result.style.display = "block";
+    result.innerHTML =
+        `Score: ${score} / ${questions.length} (${percent}%)` +
+        `<div class="sub-result">Answered: ${answered} | Unanswered: ${questions.length - answered}</div>`;
+
+    document.getElementById("submitBtn").innerText = "Recalculate Result";
+    result.scrollIntoView({ behavior: "smooth", block: "center" });
 }
+
 </script>
 
 </body>
