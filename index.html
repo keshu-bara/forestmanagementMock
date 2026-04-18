@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mock Test - Forest Management</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg,#1e3c72,#2a5298);
+    color:white;
+    padding:20px;
+}
+h1{text-align:center;}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:rgba(0,0,0,0.6);
+    padding:20px;
+    border-radius:10px;
+}
+
+.question{
+    margin-bottom:15px;
+    padding:12px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.1);
+}
+
+.correct{background:#27ae60;}
+.wrong{background:#c0392b;}
+
+.answer{
+    margin-top:8px;
+    font-size:14px;
+    color:#f1c40f;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    font-size:18px;
+    background:#f39c12;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+#result{
+    text-align:center;
+    font-size:22px;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Forest Management Mock Test</h1>
+<p style="text-align:center;">Made by Bhat Industries</p>
+
+<div class="container" id="quiz"></div>
+
+<button onclick="submitQuiz()">Submit Test</button>
+<div id="result"></div>
+
+<script>
+
+// SAMPLE QUESTIONS (pattern reused to reach 120)
+const baseQuestions = [
+ {q:"Which is not a consumptive value?",o:["Timber","Firewood","NTFP","Education"],a:3},
+ {q:"Abiotic factor is?",o:["Tree","Vine","Animal","Water"],a:3},
+ {q:"Lithosere is?",o:["Hydrosere","Xerosere","Halosere","Psammosere"],a:1},
+ {q:"Black soil is called?",o:["Regur","Alluvial","Red","Saline"],a:0},
+ {q:"Fire triangle includes?",o:["Fuel, Oxygen, Heat","Fire, Air, Wood","Heat, Air, Soil","Fuel, Smoke, Heat"],a:0}
+];
+
+// Generate 120
+let questions = [];
+for(let i=0;i<120;i++){
+    let b = baseQuestions[i%5];
+    questions.push({
+        q: b.q + " ("+(i+1)+")",
+        o: b.o,
+        a: b.a
+    });
+}
+
+const quizDiv = document.getElementById("quiz");
+
+questions.forEach((item,index)=>{
+    let html = `<div class="question" id="qbox${index}">
+    <p>${index+1}. ${item.q}</p>`;
+
+    item.o.forEach((opt,i)=>{
+        html += `
+        <label>
+        <input type="radio" name="q${index}" value="${i}">
+        ${opt}
+        </label><br>`;
+    });
+
+    html += `<div class="answer" id="ans${index}" style="display:none;"></div>`;
+    html += "</div>";
+
+    quizDiv.innerHTML += html;
+});
+
+function submitQuiz(){
+    let score = 0;
+
+    questions.forEach((item,index)=>{
+        let selected = document.querySelector(`input[name="q${index}"]:checked`);
+        let box = document.getElementById(`qbox${index}`);
+        let ansDiv = document.getElementById(`ans${index}`);
+
+        let correctText = item.o[item.a];
+
+        if(selected){
+            if(parseInt(selected.value) === item.a){
+                score++;
+                box.classList.add("correct");
+            }else{
+                box.classList.add("wrong");
+            }
+        }else{
+            box.classList.add("wrong");
+        }
+
+        ansDiv.style.display = "block";
+        ansDiv.innerHTML = "Correct Answer: " + correctText;
+    });
+
+    document.getElementById("result").innerText =
+        "Your Score: " + score + " / " + questions.length;
+}
+</script>
+
+</body>
+</html>
